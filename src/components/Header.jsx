@@ -37,18 +37,18 @@ export default function Header() {
   }, []);
 
   return (
-    <nav className={`bg-white md:text-sm ${state ? "shadow-lg rounded-xl border  mt-2 md:shadow-none md:border-none md:mt-0" : ""}`}>
+    <nav className={`md:text-sm bg-gray-100 ${state ? "shadow-lg rounded-xl border md:shadow-none md:border-none md:mt-0" : ""}`}>
       <div className="gap-x-14 items-center max-w-screen-xl mx-auto md:flex">
-        <div className="flex items-center justify-between mx-2 my-1">
+        <div className="flex items-center justify-between">
           <Link href="/">
             <Image
               src="/logo.png"
               width={300}
               height={100}
-              alt="P2P Marketplace"
+              alt="BechnuParyo"
             />
           </Link>
-          <button className="menu-btn text-gray-500 hover:text-gray-800 md:hidden" onClick={() => setState(!state)}>
+          <button className="menu-btn bg-gray-200 hover:bg-gray-300 rounded-md md:hidden mr-2" onClick={() => setState(!state)}>
             {
             state ? (
               <Icon icon="ci:close-md" width={35} height={35} />
@@ -59,11 +59,11 @@ export default function Header() {
           </button>
         </div>
         <div className={`flex-1 items-center mt-8 md:mt-0 md:flex ${state ? "block" : "hidden"} `}>
-          <ul className="justify-center items-center space-y-6 md:flex md:space-x-6 md:space-y-0">
+          <ul className="justify-center items-center space-y-6 md:flex md:space-x-6 md:space-y-0 px-4 md:px-0">
             {
               navigation.map((item, index) => {
                 return (
-                  <li key={index} className="text-gray-700 hover:text-gray-900">
+                  <li key={index} className="text-gray-700 hover:text-gray-900 font-bold">
                     <Link href={item.path} className="block">
                       {item.title}
                     </Link>
@@ -74,7 +74,8 @@ export default function Header() {
           </ul>
           {
             (status === "authenticated") && (
-              <div className="flex-1 gap-x-6 items-center justify-end mt-6 space-y-6 md:flex md:space-y-0 md:mt-0 md:mr-2 cursor-pointer">
+              <div className="flex-1 gap-x-6 items-center justify-end mt-3 md:flex md:space-y-0 md:mt-0 cursor-pointer px-2 pb-4 ms:px-0 md:pb-0">
+                <div className="flex items-center justify-center gap-2 bg-gray-200 rounded-full px-1 py-2 md:py-1">
                 <Image
                   src={user.image}
                   width={40}
@@ -82,6 +83,8 @@ export default function Header() {
                   alt={user.name}
                   className="rounded-full shadow-md"
                 />
+                <span className="inline-block md:hidden font-bold">{user.name}</span>
+                </div>
               </div>
             )
           }
@@ -94,7 +97,7 @@ export default function Header() {
           }
           {
             (status === "unauthenticated") && (
-              <div className="flex-1 gap-x-6 items-center justify-end mt-6 space-y-6 md:flex md:space-y-0 md:mt-0 md:mr-2">
+              <div className="flex-1 gap-x-6 items-center justify-end mt-6 space-y-6 md:flex md:space-y-0 md:mt-0 md:mr-1 px-2 pb-4 ms:px-0 md:pb-0">
                 <Link href="/login" className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-medium bg-gray-800 hover:bg-gray-700 active:bg-gray-900 rounded-full md:inline-flex">
                   Sign in
                   <Icon icon="mingcute:right-fill" />
