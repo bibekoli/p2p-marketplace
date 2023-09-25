@@ -38,7 +38,7 @@ export default function Header() {
 
   return (
     <nav className={`md:text-sm bg-gray-100 ${state ? "shadow-lg rounded-xl border md:shadow-none md:border-none md:mt-0" : ""}`}>
-      <div className="gap-x-14 items-center max-w-screen-xl mx-auto md:flex">
+      <div className="ms:flex justify-between flex-row gap-x-14 items-center max-w-screen-xl mx-auto md:flex">
         <div className="flex items-center justify-between">
           <Link href="/">
             <Image
@@ -58,8 +58,8 @@ export default function Header() {
             }
           </button>
         </div>
-        <div className={`flex-1 items-center mt-8 md:mt-0 md:flex ${state ? "block" : "hidden"} `}>
-          <ul className="justify-center items-center space-y-6 md:flex md:space-x-6 md:space-y-0 px-4 md:px-0">
+        <div className={`mt-8 md:mt-0 md:flex ${state ? "block" : "hidden"}`}>
+          <ul className="space-y-6 md:flex md:space-x-6 md:space-y-0 px-4 md:px-0">
             {
               navigation.map((item, index) => {
                 return (
@@ -72,6 +72,8 @@ export default function Header() {
               })
             }
           </ul>
+        </div>
+        <div className={`${state ? "block" : "hidden"} md:flex md:items-center md:justify-end md:space-x-6 md:space-y-0`}>
           {
             (status === "authenticated") && (
               <div className="flex-1 gap-x-6 items-center justify-end mt-3 md:flex md:space-y-0 md:mt-0 cursor-pointer px-2 pb-4 ms:px-0 md:pb-0">
