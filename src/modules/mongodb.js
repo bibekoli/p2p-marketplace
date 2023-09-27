@@ -2,7 +2,6 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 
 const MongoDBConfig = {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 };
 
