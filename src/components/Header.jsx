@@ -26,7 +26,6 @@ export default function Header() {
     { title: "Popular", path: "/popular" },
     { title: "Recent", path: "/recent" },
     { title: "Categories", path: "/categories" },
-    { title: "About", path: "/about" },
   ];
 
   useEffect(() => {
@@ -35,6 +34,15 @@ export default function Header() {
       if (!target.closest(".menu-btn")) setState(false);
     };
   }, []);
+
+  const toggleNav = () => {
+    if (state) {
+      setState(false);
+    }
+    else {
+      setState(true);
+    }
+  }
 
   return (
     <nav className={`md:text-sm bg-gray-100 ${state ? "shadow-lg rounded-xl border md:shadow-none md:border-none md:mt-0" : ""}`}>
@@ -48,7 +56,7 @@ export default function Header() {
               alt="BechnuParyo"
             />
           </Link>
-          <button className="menu-btn bg-gray-200 hover:bg-gray-300 rounded-md md:hidden mr-2" onClick={() => setState(!state)}>
+          <button className="menu-btn bg-gray-200 hover:bg-gray-300 rounded-md md:hidden mr-2" onClick={toggleNav}>
             {
             state ? (
               <Icon icon="ci:close-md" width={35} height={35} />
@@ -70,6 +78,15 @@ export default function Header() {
                   </li>
                 );
               })
+            }
+            {
+              (status === "authenticated") && (
+                <li className="text-gray-700 hover:text-gray-900 font-bold">
+                  <Link href="/create" className="block">
+                    Post Ad
+                  </Link>
+                </li>
+              )
             }
           </ul>
         </div>
