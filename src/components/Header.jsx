@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
-import { getSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { getSession, signOut } from "next-auth/react";
 
 export default function Header() {
-  const [state, setState] = useState(false);
   const [status, setStatus] = useState("loading");
   const [user, setUser] = useState(null);
   
@@ -23,109 +23,137 @@ export default function Header() {
   , []);
 
   const navigation = [
-    { title: "Popular", path: "/popular" },
-    { title: "Recent", path: "/recent" },
-    { title: "Categories", path: "/categories" },
+    {
+      title: "Home",
+      path: "/",
+      icon: "ic:baseline-home",
+    },
+    {
+      title: "Recent",
+      path: "/new",
+      icon: "ic:baseline-history",
+    },
+    {
+      title: "Categories",
+      path: "/categories",
+      icon: "carbon:category",
+    },
+    {
+      title: "About Us",
+      path: "/about",
+      icon: "ic:baseline-info",
+    },
+    {
+      title: "Contact Us",
+      path: "/contact",
+      icon: "ic:baseline-contact-page",
+    },
   ];
 
-  useEffect(() => {
-    document.onclick = (e) => {
-      const target = e.target;
-      if (!target.closest(".menu-btn")) setState(false);
-    };
-  }, []);
-
-  const toggleNav = () => {
-    if (state) {
-      setState(false);
-    }
-    else {
-      setState(true);
-    }
-  }
-
   return (
-    <nav className={`md:text-sm bg-gray-100 ${state ? "shadow-lg rounded-xl border md:shadow-none md:border-none md:mt-0" : ""}`}>
-      <div className="ms:flex justify-between flex-row gap-x-14 items-center max-w-screen-xl mx-auto md:flex">
-        <div className="flex items-center justify-between">
-          <Link href="/">
-            <Image
-              src="/logo.png"
-              width={300}
-              height={100}
-              alt="BechnuParyo"
-            />
-          </Link>
-          <button className="menu-btn bg-gray-200 hover:bg-gray-300 rounded-md md:hidden mr-2" onClick={toggleNav}>
-            {
-            state ? (
-              <Icon icon="ci:close-md" width={35} height={35} />
-              ) : (
-                <Icon icon="ci:hamburger-md" width={35} height={35} />
-              )
-            }
-          </button>
+      <div className="shadow">
+    <div className="navbar bg-base-100 max-w-screen-xl mx-auto">
+        <div className="navbar-start">
+          <div className="dropdown dropdown-hover">
+            <label tabIndex={0} className="btn btn-ghost btn-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+            </label>
+            <ul tabIndex={0} className="dropdown-content font-medium z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+              {
+                navigation.map((item, index) => {
+                  return (
+                    <li key={index}>
+                      <Link href={item.path}>
+                        <Icon icon={item.icon} width={25} height={25} />
+                        {item.title}
+                      </Link>
+                    </li>
+                  );
+                })
+              }
+            </ul>
+          </div>
         </div>
-        <div className={`mt-8 md:mt-0 md:flex ${state ? "block" : "hidden"}`}>
-          <ul className="space-y-6 md:flex md:space-x-6 md:space-y-0 px-4 md:px-0">
-            {
-              navigation.map((item, index) => {
-                return (
-                  <li key={index} className="text-gray-700 hover:text-gray-900 font-bold">
-                    <Link href={item.path} className="block">
-                      {item.title}
+        <div className="navbar-center cursor-pointer">
+          <Link href="/">
+            <Image src={"/logo.png"} width={250} height={80} alt="BechnuParyo" />
+          </Link>
+        </div>
+        <div className="navbar-end">
+          <button className="btn btn-ghost btn-circle">
+            <Icon icon="ic:round-search" width={22} height={22} />
+          </button>
+          <div className="dropdown dropdown-hover dropdown-end">
+            <button tabIndex={0} className="btn btn-ghost btn-circle">
+              {
+                (status === "authenticated") && (
+                  <Image
+                    src={user.image}
+                    width={35}
+                    height={35}
+                    alt={user.name}
+                    className="rounded-full shadow-md"
+                  />
+                )
+              }
+              {
+                (status === "loading") && (
+                  <Icon icon="la:spinner" className="animate-spin" width={30} height={30} />
+                )
+              }
+              {
+                (status === "unauthenticated") && (
+                  <Icon icon="teenyicons:user-circle-solid" width={35} height={35} />
+                )
+              }
+            </button>
+            <ul tabIndex={0} className="dropdown-content font-medium z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+              {
+                (status === "authenticated") && (
+                  <>
+                    <li>
+                      <Link href={`/account`}>
+                        <Image src={user.image} width={25} height={25} alt={user.name} className="rounded-full shadow-md" />
+                        My Account
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/create">
+                        <Icon icon="gala:add" width={25} height={25} />
+                        Post Ad
+                      </Link>
+                    </li>
+                    <li>
+                      <p onClick={() => signOut()}>
+                        <Icon icon="material-symbols:logout-rounded" width={25} height={25} />
+                        Logout
+                      </p>
+                    </li>
+                  </>
+                )
+              }
+              {
+                (status === "loading") && (
+                  <li>
+                    <Icon icon="la:spinner" className="animate-spin" width={25} height={25} />
+                    Loading
+                  </li>
+                )
+              }
+              {
+                (status === "unauthenticated") && (
+                  <li>
+                    <Link href="/login">
+                      <Icon icon="ic:round-login" width={25} height={25} />
+                      Login
                     </Link>
                   </li>
-                );
-              })
-            }
-            {
-              (status === "authenticated") && (
-                <li className="text-gray-700 hover:text-gray-900 font-bold">
-                  <Link href="/create" className="block">
-                    Post Ad
-                  </Link>
-                </li>
-              )
-            }
-          </ul>
-        </div>
-        <div className={`${state ? "block" : "hidden"} md:flex md:items-center md:justify-end md:space-x-6 md:space-y-0`}>
-          {
-            (status === "authenticated") && (
-              <div className="flex-1 gap-x-6 items-center justify-end mt-3 md:flex md:space-y-0 md:mt-0 cursor-pointer px-2 pb-4 ms:px-0 md:pb-0">
-                <div className="flex items-center justify-center gap-2 bg-gray-200 rounded-full px-1 py-2 md:py-1">
-                <Image
-                  src={user.image}
-                  width={40}
-                  height={40}
-                  alt={user.name}
-                  className="rounded-full shadow-md"
-                />
-                <span className="inline-block md:hidden font-bold">{user.name}</span>
-                </div>
-              </div>
-            )
-          }
-          {
-            (status === "loading") && (
-              <div className="flex-1 gap-x-6 items-center justify-end mt-6 space-y-6 md:flex md:space-y-0 md:mt-0 md:mr-2">
-                <Icon icon="la:spinner" className="animate-spin" width={30} height={30} />
-              </div>
-            )
-          }
-          {
-            (status === "unauthenticated") && (
-              <div className="flex-1 gap-x-6 items-center justify-end mt-6 space-y-6 md:flex md:space-y-0 md:mt-0 md:mr-1 px-2 pb-4 ms:px-0 md:pb-0">
-                <Link href="/login" className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-medium bg-gray-800 hover:bg-gray-700 active:bg-gray-900 rounded-full md:inline-flex">
-                  Sign in
-                  <Icon icon="mingcute:right-fill" />
-                </Link>
-              </div>
-            )
-          }
+                )
+              }
+            </ul>
+          </div>
         </div>
       </div>
-    </nav>
+    </div>
   );
 }
