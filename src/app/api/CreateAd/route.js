@@ -7,7 +7,9 @@ export async function POST(request) {
     const items = await db.collection("Items");
     const data = await request.json();
     const response = await items.insertOne(data);
-    return NextResponse.json(response);
+    return NextResponse.json({
+      id: response.insertedId,
+    });
   }
   catch (error) {
     return NextResponse.error(error);

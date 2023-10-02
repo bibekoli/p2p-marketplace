@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+import { useRouter } from "next/navigation";
 
 const TextInput = ({ label, placeholder, required, disabled, error, setError, value, onChange, className }) => (
   <div className={`form-control w-full ${className}`}>
@@ -28,39 +29,23 @@ const DropDown = ({ label, required, value, onChange, options, className }) => (
   </div>
 );
 
-/*
-  Name: string -  e.g. "iPhone 12 Pro Max"
-  Description: string - e.g. "Brand new iPhone 12 Pro Max with 128GB storage"
-  Images: array of urls - e.g. ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]
-
-  Condition: string - e.g. "Brand New", "Like New", "Used", "Not Working"
-  Category: string - e.g. "Electronics"
-  Subcategory: string - e.g. "Mobile Phones"
-  Adult Content: boolean - e.g. true, false
-
-  Price: object - e .g. { type: "fixed", amount: 1000 } or { type: "negotiable", amount: 1000 } or { type: "free", amount: 0 }
-  Delivery: object - e.g. { area: "", cost: ""}, area: "Within My Area", "Within My City", "Anywhere in Nepal"
-  Delivery Type: Public Meetup, Door Pickup, Door Dropoff
-
-  Ad Expiry: date - e.g. 2021-12-31
-*/
-
 export default function Form() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState({ type: "fixed", amount: "" });
   const [images, setImages] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
   const [myLocation, setMyLocation] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
-  const [condition, setCondition] = useState({});
-  const [category, setCategory] = useState("");
-  const [delivery, setDelivery] = useState({
-    type: "",
-    area: "",
-    cost: ""
+  const [condition, setCondition] = useState("Good");
+  const [category, setCategory] = useState("Others");
+  const [price, setPrice] = useState({
+    type: "Fixed",
+    amount: 0
   });
-
+  const [delivery, setDelivery] = useState({
+    type: "Public Meetup",
+    area: "Within My Area",
+    cost: 0
+  });
 
   const [nameError, setNameError] = useState(false);
   const [priceError, setPriceError] = useState(false);
@@ -68,14 +53,14 @@ export default function Form() {
   const [myLocationError, setMyLocationError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
   const [deliveryCostError, setDeliveryCostError] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  
+  const router = useRouter();
 
-  
   const handleImageUpload = (e) => {
     const files = e.target.files;
-    
-    // upload the file to /api/UplaodImage
+    if (files.length === 0) return;
+
     const formData = new FormData();
     formData.append("image", files[0]);
     formData.append("type", "marketplace");
@@ -89,11 +74,9 @@ export default function Form() {
     .then((data) => {
       setUploadingImage(false);
       setImages((prev) => [...prev, data.image]);
-      // console.log(data);
     })
     .catch((error) => {
       setUploadingImage(false);
-      console.log(error);
     });
   }
 
@@ -124,7 +107,7 @@ export default function Form() {
       error = true;
     }
 
-    if (price.amount.trim() === "") {
+    if (price.amount === 0) {
       setPriceError(true);
       error = true;
     }
@@ -139,37 +122,39 @@ export default function Form() {
       error = true;
     }
 
-    if (delivery.type !== "Door Pickup" && delivery.cost.trim() === "") {
+    if (delivery.type !== "Door Pickup" && delivery.cost === 0) {
       setDeliveryCostError(true);
       error = true;
     }
 
     if (error) return;
 
-    // convert price and delivery cost to integer
     price.amount = parseInt(price.amount);
     delivery.cost = parseInt(delivery.cost);
     
     const item = {
       name,
       description,
-      price,
       images,
       condition,
       category,
-      delivery
+      price,
+      delivery,
+      myLocation,
     }
-    
+
+    setSaving(true);
+
     fetch("/api/CreateAd", {
       method: "POST",
       body: JSON.stringify(item)
     })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
+      router.push(`/item/${data.id}`);
     })
     .catch((error) => {
-      console.log(error);
+      setSaving(false);
     });
   }
 
@@ -178,6 +163,7 @@ export default function Form() {
       <div className="m-4 p-4 rounded-md">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-4">
+            {/* Name */}
             <TextInput
               label="Name"
               placeholder="e.g. Google Pixel 8 Pro"
@@ -244,7 +230,7 @@ export default function Form() {
           <div className="flex flex-col gap-4">
             <DropDown label="Condition" required value={condition} onChange={e => setCondition(e.target.value)} options={["Brand New", "Like New", "Good", "Not Working"]} />
 
-              {/* Images */}
+            {/* Images */}
             <div className="form-control w-full">
               <label className="label">
                 <span className="label-text font-semibold required">Images *</span>
@@ -291,13 +277,13 @@ export default function Form() {
 
             <DropDown label="Category" required value={category} onChange={e => setCategory(e.target.value)} options={itemCategories} />
             
-            {/* div with 2 dropdowns, delivery type and delivery area */}
+            {/* Delivery */}
             <div className="flex flex-row gap-4">
               <DropDown label="Delivery Type" required value={delivery.type} onChange={e => setDelivery((prev) => ({ ...prev, type: e.target.value }))} options={["Public Meetup", "Door Pickup", "Door Dropoff"]} className="w-[60%]" />
               <DropDown label="Delivery Area" required value={delivery.area} onChange={e => setDelivery((prev) => ({ ...prev, area: e.target.value }))} options={["Within My Area", "Within My City", "Anywhere in Nepal"]} className="w-[40%]" />
             </div>
 
-            {/* delivery cost */}
+            {/* Delivery Cost */}
             <TextInput
               label="Delivery Cost"
               placeholder="e.g. 100"
@@ -315,9 +301,20 @@ export default function Form() {
           </div>
         </div>
         <div className="flex justify-end gap-4 mt-4">
-          <button className="btn btn-primary rounded-lg" onClick={addItem}>
-            <Icon icon="mingcute:add-fill" />
-            Create
+          <button className="btn btn-primary rounded-lg" onClick={addItem} disabled={saving}>
+            {
+              saving ? (
+                <>
+                  <Icon icon="gg:spinner-two-alt" width={20} height={20} className="animate-spin" />
+                  <span>Posting</span>
+                </>
+              ) : (
+                <>
+                  <Icon icon="ant-design:plus-outlined" width={20} height={20} />
+                  <span>Post</span>
+                </>
+              )
+            }
           </button>
         </div>
       </div>
