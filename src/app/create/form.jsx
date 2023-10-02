@@ -54,7 +54,11 @@ export default function Form() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [condition, setCondition] = useState({});
   const [category, setCategory] = useState("");
-  const [delivery, setDelivery] = useState({});
+  const [delivery, setDelivery] = useState({
+    type: "",
+    area: "",
+    cost: ""
+  });
   
   const handleImageUpload = (e) => {
     const files = e.target.files;
@@ -94,6 +98,19 @@ export default function Form() {
     "Sports",
     "Others",
   ]
+
+  const addItem = () => {
+    const item = {
+      name,
+      description,
+      price,
+      images,
+      condition,
+      category,
+      delivery
+    }
+    console.log(item);
+  }
 
   return (
     <div className="max-w-screen-xl mx-auto">
@@ -165,10 +182,16 @@ export default function Form() {
               </div>
             </div>
             <DropDown label="Category" required value={category} onChange={e => setCategory(e.target.value)} options={itemCategories} />
-            <TextInput label="Delivery" value={delivery} onChange={e => setDelivery(e.target.value)} />
-            <TextInput label="Delivery" value={delivery} onChange={e => setDelivery(e.target.value)} />
-            <TextInput label="Delivery" value={delivery} onChange={e => setDelivery(e.target.value)} />
+            
+            {/* devivery type dropdown */}
+            <DropDown label="Delivery" required value={delivery} onChange={e => setDelivery(e.target.value)} options={["Within My Area", "Within My City", "Anywhere in Nepal"]} />
           </div>
+        </div>
+        <div className="flex justify-end gap-4 mt-4">
+          <button className="btn btn-primary rounded-lg" onClick={addItem}>
+            <Icon icon="mingcute:add-fill" />
+            Create
+          </button>
         </div>
       </div>
     </div>
