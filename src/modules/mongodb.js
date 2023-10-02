@@ -1,7 +1,6 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 
 const MongoDBConfig = {
-  useNewUrlParser: true,
   serverApi: ServerApiVersion.v1,
 };
 
