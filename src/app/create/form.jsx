@@ -4,12 +4,12 @@ import Image from "next/image";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 
-const TextInput = ({ label, required, value, onChange, className }) => (
+const TextInput = ({ label, placeholder, required, disabled, error, setError, value, onChange, className }) => (
   <div className={`form-control w-full ${className}`}>
     <label className="label">
       <span className="label-text font-semibold required">{label} {required && "*"}</span>
     </label>
-    <input type="text" value={value} onChange={onChange} className="input input-bordered w-full rounded-lg" />
+    <input type="text" disabled={disabled} placeholder={placeholder} value={value} onChange={onChange} className={`input input-bordered input-h w-full rounded-lg ${error && "input-error"}`} />
   </div>
 );
 
@@ -48,9 +48,10 @@ const DropDown = ({ label, required, value, onChange, options, className }) => (
 export default function Form() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState({ type: "fixed", amount: 0 });
+  const [price, setPrice] = useState({ type: "fixed", amount: "" });
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [myLocation, setMyLocation] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [condition, setCondition] = useState({});
   const [category, setCategory] = useState("");
@@ -59,6 +60,17 @@ export default function Form() {
     area: "",
     cost: ""
   });
+
+
+  const [nameError, setNameError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [myLocationError, setMyLocationError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+  const [deliveryCostError, setDeliveryCostError] = useState(false);
+
+  
+
   
   const handleImageUpload = (e) => {
     const files = e.target.files;
@@ -68,6 +80,7 @@ export default function Form() {
     formData.append("image", files[0]);
     formData.append("type", "marketplace");
     setUploadingImage(true);
+    setImageError(false);
     fetch("/api/UploadImage", {
       method: "POST",
       body: formData
@@ -100,6 +113,39 @@ export default function Form() {
   ]
 
   const addItem = () => {
+    let error = false;
+    if (name.trim() === "") {
+      setNameError(true);
+      error = true;
+    }
+
+    if (description.trim() === "") {
+      setDescriptionError(true);
+      error = true;
+    }
+
+    if (price.amount.trim() === "") {
+      setPriceError(true);
+      error = true;
+    }
+
+    if (myLocation.trim() === "") {
+      setMyLocationError(true);
+      error = true;
+    }
+
+    if (images.length === 0) {
+      setImageError(true);
+      error = true;
+    }
+
+    if (delivery.type !== "Door Pickup" && delivery.cost.trim() === "") {
+      setDeliveryCostError(true);
+      error = true;
+    }
+
+    if (error) return;
+
     const item = {
       name,
       description,
@@ -109,7 +155,20 @@ export default function Form() {
       category,
       delivery
     }
-    console.log(item);
+
+    // 
+    
+    fetch("/api/CreateAd", {
+      method: "POST",
+      body: JSON.stringify(item)
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   return (
@@ -117,21 +176,67 @@ export default function Form() {
       <div className="m-4 p-4 rounded-md ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-4">
-            <TextInput label="Name" required value={name} onChange={e => setName(e.target.value)} />
+            <TextInput
+              label="Name"
+              placeholder="e.g. Google Pixel 8 Pro"
+              required
+              error={nameError}
+              setError={setNameError}
+              value={name}
+              onChange={e => {
+                setName(e.target.value);
+                setNameError(false);
+              }}
+            />
 
             {/* Description */}
             <div className="form-control w-full">
               <label className="label">
                 <span className="label-text font-semibold required">Description *</span>
               </label>
-              <textarea className="textarea textarea-bordered rounded-md h-[248px] resize-none" placeholder="Description" rows={8} value={description} onChange={e => setDescription(e.target.value)} />
+              <textarea
+                className={`textarea textarea-bordered ${descriptionError && "textarea-error"} rounded-md h-[248px] resize-none`}
+                placeholder="Description"
+                rows={8}
+                value={description}
+                onChange={e => {
+                  setDescription(e.target.value);
+                  setDescriptionError(false);
+                }}
+              />
             </div>
             
             {/* Price */}
             <div className="flex flex-row gap-4">
-              <TextInput label="Price" required value={price.amount} onChange={e => setPrice((prev) => ({ ...prev, amount: e.target.value }))} className="w-[60%]" />
+              <TextInput
+                label="Price"
+                placeholder="e.g. 150000"
+                required
+                error={priceError}
+                setError={setPriceError}
+                value={price.amount}
+                onChange={e => {
+                  setPrice((prev) => ({ ...prev, amount: e.target.value }));
+                  setPriceError(false);
+                }} 
+                className="w-[60%]"
+              />
               <DropDown label="Price Type" required value={price.type} onChange={e => setPrice((prev) => ({ ...prev, type: e.target.value }))} options={["Fixed", "Negotiable", "Free"]} className="w-[40%]" />
             </div>
+
+            {/* My Location */}
+            <TextInput
+              label="My Location"
+              placeholder="e.g. Kathmandu, Nepal"
+              required
+              error={myLocationError}
+              setError={setMyLocationError}
+              value={myLocation}
+              onChange={e => {
+                setMyLocation(e.target.value);
+                setMyLocationError(false);
+              }}
+            />
           </div>
 
           <div className="flex flex-col gap-4">
@@ -143,7 +248,7 @@ export default function Form() {
                 <span className="label-text font-semibold required">Images *</span>
               </label>
               <div className="flex flex-row items-start overflow-x-auto gap-4 no-scrollbar">
-                <div className={`card h-[150px] ${images.length === 0 ? "w-full" : "w-[150px]"} rounded-md border-2 border-dashed border-gray-300 flex flex-col justify-center items-center`}>
+                <div className={`card h-[150px] ${images.length === 0 ? "w-full" : "w-[150px]"} rounded-md border-2 border-dashed ${imageError ? "border-red-500" : "border-gray-300"} flex flex-col justify-center items-center`}>
                   <label htmlFor="image-upload" className={`cursor-pointer text-4xl text-gray-300 ${images.length === 0 ? "w-full" : "w-[150px]"} h-full flex flex-col justify-center items-center gap-2`}>
                     {
                       uploadingImage ? (
@@ -181,10 +286,29 @@ export default function Form() {
                 }
               </div>
             </div>
+
             <DropDown label="Category" required value={category} onChange={e => setCategory(e.target.value)} options={itemCategories} />
             
-            {/* devivery type dropdown */}
-            <DropDown label="Delivery" required value={delivery} onChange={e => setDelivery(e.target.value)} options={["Within My Area", "Within My City", "Anywhere in Nepal"]} />
+            {/* div with 2 dropdowns, delivery type and delivery area */}
+            <div className="flex flex-row gap-4">
+              <DropDown label="Delivery Type" required value={delivery.type} onChange={e => setDelivery((prev) => ({ ...prev, type: e.target.value }))} options={["Public Meetup", "Door Pickup", "Door Dropoff"]} className="w-[60%]" />
+              <DropDown label="Delivery Area" required value={delivery.area} onChange={e => setDelivery((prev) => ({ ...prev, area: e.target.value }))} options={["Within My Area", "Within My City", "Anywhere in Nepal"]} className="w-[40%]" />
+            </div>
+
+            {/* delivery cost */}
+            <TextInput
+              label="Delivery Cost"
+              placeholder="e.g. 100"
+              required
+              error={deliveryCostError}
+              setError={setPriceError}
+              value={delivery.cost}
+              disabled={delivery.type === "Door Pickup"}
+              onChange={e => {
+                setDelivery((prev) => ({ ...prev, cost: e.target.value }));
+              }} 
+              className="w-[60%]"
+            />
           </div>
         </div>
         <div className="flex justify-end gap-4 mt-4">
