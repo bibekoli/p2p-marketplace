@@ -301,11 +301,12 @@ export default function Form() {
               placeholder="e.g. 100"
               required
               error={deliveryCostError}
-              setError={setPriceError}
+              setError={setDeliveryCostError}
               value={delivery.cost}
               disabled={delivery.type === "Door Pickup"}
               onChange={e => {
                 setDelivery((prev) => ({ ...prev, cost: e.target.value }));
+                setDeliveryCostError(false);
               }} 
               className="w-[60%]"
             />
