@@ -38,7 +38,7 @@ const DropDown = ({ label, required, value, onChange, options, className }) => (
   Subcategory: string - e.g. "Mobile Phones"
   Adult Content: boolean - e.g. true, false
 
-  Price: object - e.g. { type: "fixed", amount: 1000 } or { type: "negotiable", amount: 1000 } or { type: "free", amount: 0 }
+  Price: object - e .g. { type: "fixed", amount: 1000 } or { type: "negotiable", amount: 1000 } or { type: "free", amount: 0 }
   Delivery: object - e.g. { area: "", cost: ""}, area: "Within My Area", "Within My City", "Anywhere in Nepal"
   Delivery Type: Public Meetup, Door Pickup, Door Dropoff
 
