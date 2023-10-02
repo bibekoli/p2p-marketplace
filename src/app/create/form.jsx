@@ -146,6 +146,10 @@ export default function Form() {
 
     if (error) return;
 
+    // convert price and delivery cost to integer
+    price.amount = parseInt(price.amount);
+    delivery.cost = parseInt(delivery.cost);
+    
     const item = {
       name,
       description,
@@ -155,8 +159,6 @@ export default function Form() {
       category,
       delivery
     }
-
-    // 
     
     fetch("/api/CreateAd", {
       method: "POST",
@@ -173,7 +175,7 @@ export default function Form() {
 
   return (
     <div className="max-w-screen-xl mx-auto">
-      <div className="m-4 p-4 rounded-md ">
+      <div className="m-4 p-4 rounded-md">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-4">
             <TextInput
