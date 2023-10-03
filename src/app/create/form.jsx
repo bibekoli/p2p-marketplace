@@ -58,7 +58,6 @@ export default function Form() {
 
   const router = useRouter();
   const { data, status } = useSession();
-  console.log(data, status);
 
   const handleImageUpload = (e) => {
     const files = e.target.files;
