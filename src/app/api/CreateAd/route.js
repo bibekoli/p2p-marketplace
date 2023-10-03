@@ -6,6 +6,7 @@ export async function POST(request) {
     const { db } = await ConnectToDatabase();
     const items = await db.collection("Items");
     const data = await request.json();
+    
     const response = await items.insertOne(data);
     return NextResponse.json({
       id: response.insertedId,
