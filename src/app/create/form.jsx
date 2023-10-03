@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const TextInput = ({ label, placeholder, required, disabled, error, setError, value, onChange, className }) => (
   <div className={`form-control w-full ${className}`}>
@@ -56,6 +57,8 @@ export default function Form() {
   const [saving, setSaving] = useState(false);
 
   const router = useRouter();
+  const { data, status } = useSession();
+  console.log(data, status);
 
   const handleImageUpload = (e) => {
     const files = e.target.files;
@@ -141,6 +144,7 @@ export default function Form() {
       price,
       delivery,
       myLocation,
+      seller: data.user.email
     }
 
     setSaving(true);
