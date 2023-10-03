@@ -143,7 +143,11 @@ export default function Form() {
       price,
       delivery,
       myLocation,
-      seller: data.user.email
+      status: "available",
+      visibility: "public",
+      seller: data.user.email,
+      sellerName: data.user.name,
+      createdAt: new Date(),
     }
 
     setSaving(true);
