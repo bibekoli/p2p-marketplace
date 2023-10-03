@@ -1,15 +1,20 @@
+import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import ConnectToDatabase from "@/modules/mongodb";
 
-export async function GET() {
-  const { db } = await ConnectToDatabase();
-  const users = await db.collection("Users");
+export async function GET(request) {
+  const id = request.nextUrl.searchParams.get("id");
 
-  const data = {
-    title: "P2P Marketplace",
-    description: "Buy and sell things directly without third party.",
-    data: await users.find({}).toArray(),
+  if (!ObjectId.isValid(id)) {
+    return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
   }
 
-  return NextResponse.json(data);
+  const { db } = await ConnectToDatabase();
+  const items = await db.collection("Items");
+
+  const item = await items.findOne({ _id: new ObjectId(id) });
+  if (!item) {
+    return NextResponse.json({}, { status: 404 });
+  }
+  return NextResponse.json(item);
 }
