@@ -1,15 +1,10 @@
 import { NextResponse } from "next/server";
 import ConnectToDatabase from "@/modules/mongodb";
 
-export async function GET() {
+export async function GET(request) {
   const { db } = await ConnectToDatabase();
-  const users = await db.collection("Users");
-
-  const data = {
-    title: "P2P Marketplace",
-    description: "Buy and sell things directly without third party.",
-    data: await users.find({}).toArray(),
-  }
-
-  return NextResponse.json(data);
+  const items = await db.collection("Items");
+  
+  const allItems = await items.find({ visibility: "public" }, { projection: { visibility: 0 } }).toArray();
+  return NextResponse.json(allItems);
 }
