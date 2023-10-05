@@ -12,10 +12,7 @@ export async function GET(request) {
   const { db } = await ConnectToDatabase();
   const items = await db.collection("Items");
   
-  const item = await items.findOne({ _id: new ObjectId(id), visibility: "public" });
-  delete item.seller;
-  delete item.visibility;
-  
+  const item = await items.findOne({ _id: new ObjectId(id), visibility: "public" }, { projection: { visibility: 0 } });
   if (!item) {
     return NextResponse.json({}, { status: 404 });
   }
