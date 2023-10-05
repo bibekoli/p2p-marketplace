@@ -4,7 +4,6 @@ import ImageCarousel from "@/components/ImageCarousel";
 import { useState } from "react";
 
 export default function ItemClient({ item }) {
-  console.log(item);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   return (
