@@ -6,6 +6,10 @@ export async function POST(request) {
     const { db } = await ConnectToDatabase();
     const items = await db.collection("Items");
     const data = await request.json();
+
+    const seller = await db.collection("Users").findOne({ email: data.seller });
+    data.seller = seller._id;
+
     
     const response = await items.insertOne(data);
     return NextResponse.json({
