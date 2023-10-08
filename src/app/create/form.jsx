@@ -151,7 +151,7 @@ export default function Form() {
       error = true;
     }
 
-    if (delivery.type !== "Door Pickup" && delivery.cost === 0) {
+    if (delivery.cost === 0 && delivery.type !== "AnywhereDoorPickup" && delivery.type !== "CityDoorPickup" && delivery.type !== "AreaDoorPickup") {
       setDeliveryCostError(true);
       error = true;
     }
@@ -162,9 +162,14 @@ export default function Form() {
     }
 
     if (error) return;
-
+    
     price.amount = parseInt(price.amount);
-    delivery.cost = parseInt(delivery.cost);
+    if (delivery.type === "AnywhereDoorPickup" || delivery.type === "CityDoorPickup" || delivery.type === "AreaDoorPickup") {
+      delivery.cost = 0;
+    }
+    else {
+      delivery.cost = parseInt(delivery.cost);
+    }
     
     const item = {
       name,
@@ -174,11 +179,11 @@ export default function Form() {
       category,
       price,
       delivery,
-      myLocation,
+      my_location: myLocation,
       status: "available",
       visibility: "public",
       keywords,
-      createdAt: new Date(),
+      created_at: new Date(),
       seller: null,
       tempSellerRef: data.user.email
     }
@@ -327,7 +332,15 @@ export default function Form() {
                 <label className="label">
                   <span className="label-text font-semibold required">Delivery Type *</span>
                 </label>
-                <select value={delivery.type} onChange={e => setDelivery((prev) => ({ ...prev, type: e.target.value }))} className="select select-bordered rounded-lg">
+                <select
+                  value={delivery.type}
+                  className="select select-bordered rounded-lg"
+                  onChange={e => {
+                    setDelivery((prev) => ({ ...prev, type: e.target.value }));
+                    if (e.target.value === "AnywhereDoorPickup" || e.target.value === "CityDoorPickup" || e.target.value === "AreaDoorPickup") {
+                      setDeliveryCostError(false);
+                    }
+                  }}>
                   <optgroup label="Anywhere in Nepal">
                     <option value="AnywherePublicMeetup">Public Meetup</option>
                     <option value="AnywhereDoorPickup">Door Pickup</option>
