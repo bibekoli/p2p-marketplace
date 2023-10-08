@@ -6,12 +6,12 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-const TextInput = ({ label, placeholder, required, disabled, error, setError, value, onChange, className }) => (
+const TextInput = ({ type, label, placeholder, required, disabled, error, setError, value, onChange, className }) => (
   <div className={`form-control w-full ${className}`}>
     <label className="label">
       <span className="label-text font-semibold required">{label} {required && "*"}</span>
     </label>
-    <input type="text" disabled={disabled} placeholder={placeholder} value={value} onChange={onChange} className={`input input-bordered input-h w-full rounded-lg ${error && "input-error"}`} />
+    <input type={type} disabled={disabled} placeholder={placeholder} value={value} onChange={onChange} className={`input input-bordered input-h w-full rounded-lg ${error && "input-error"}`} />
   </div>
 );
 
@@ -38,13 +38,13 @@ export default function Form() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [condition, setCondition] = useState("Good");
   const [category, setCategory] = useState("Others");
+  const [tempKeywords, setTempKeywords] = useState("");
   const [price, setPrice] = useState({
     type: "Fixed",
     amount: 0
   });
   const [delivery, setDelivery] = useState({
-    type: "Public Meetup",
-    area: "Within My Area",
+    type: "AnywherePublicMeetup",
     cost: 0
   });
 
@@ -54,6 +54,7 @@ export default function Form() {
   const [myLocationError, setMyLocationError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
   const [deliveryCostError, setDeliveryCostError] = useState(false);
+  const [keywordsError, setKeywordsError] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const router = useRouter();
@@ -108,7 +109,7 @@ export default function Form() {
     "Jewelry and Watches",
     "Jobs and Services",
     "Mobile and Accessories",
-    "Musical Instruments",
+    "Music and Musical Instruments",
     "Outdoor and Adventure Gear",
     "Party and Event Supplies",
     "Pets and Pet Supplies",
@@ -123,6 +124,8 @@ export default function Form() {
 
   const addItem = () => {
     let error = false;
+    const keywords = tempKeywords.split(",").map((keyword) => keyword.trim()).filter((keyword) => keyword !== "").filter((keyword, index, self) => self.indexOf(keyword) === index).sort();
+    
     if (name.trim() === "") {
       setNameError(true);
       error = true;
@@ -153,6 +156,11 @@ export default function Form() {
       error = true;
     }
 
+    if (keywords.length === 0) {
+      setKeywordsError(true);
+      error = true;
+    }
+
     if (error) return;
 
     price.amount = parseInt(price.amount);
@@ -169,9 +177,10 @@ export default function Form() {
       myLocation,
       status: "available",
       visibility: "public",
-      seller: data.user.email,
-      sellerName: data.user.name,
+      keywords,
       createdAt: new Date(),
+      seller: null,
+      tempSellerRef: data.user.email
     }
 
     setSaving(true);
@@ -196,9 +205,10 @@ export default function Form() {
           <div className="flex flex-col gap-4">
             {/* Name */}
             <TextInput
+              required
+              type="text"
               label="Name"
               placeholder="e.g. Google Pixel 8 Pro"
-              required
               error={nameError}
               setError={setNameError}
               value={name}
@@ -228,12 +238,13 @@ export default function Form() {
             {/* Price */}
             <div className="flex flex-row gap-4">
               <TextInput
+                required
+                type="number"
                 label="Price"
                 placeholder="e.g. 150000"
-                required
                 error={priceError}
                 setError={setPriceError}
-                value={price.amount}
+                value={price.amount === 0 ? "" : price.amount}
                 onChange={e => {
                   setPrice((prev) => ({ ...prev, amount: e.target.value }));
                   setPriceError(false);
@@ -245,9 +256,10 @@ export default function Form() {
 
             {/* My Location */}
             <TextInput
-              label="My Location"
-              placeholder="e.g. Kathmandu, Nepal"
               required
+              type="text"
+              label="My Location"
+              placeholder="e.g. Birtamod, Jhapa"
               error={myLocationError}
               setError={setMyLocationError}
               value={myLocation}
@@ -305,29 +317,66 @@ export default function Form() {
                 }
               </div>
             </div>
-
+            
+            {/* Category */}
             <DropDown label="Category" required value={category} onChange={e => setCategory(e.target.value)} options={itemCategories} />
             
             {/* Delivery */}
             <div className="flex flex-row gap-4">
-              <DropDown label="Delivery Type" required value={delivery.type} onChange={e => setDelivery((prev) => ({ ...prev, type: e.target.value }))} options={["Public Meetup", "Door Pickup", "Door Dropoff"]} className="w-[60%]" />
-              <DropDown label="Delivery Area" required value={delivery.area} onChange={e => setDelivery((prev) => ({ ...prev, area: e.target.value }))} options={["Within My Area", "Within My City", "Anywhere in Nepal"]} className="w-[40%]" />
+              <div className={`form-control flex-1`}>
+                <label className="label">
+                  <span className="label-text font-semibold required">Delivery Type *</span>
+                </label>
+                <select value={delivery.type} onChange={e => setDelivery((prev) => ({ ...prev, type: e.target.value }))} className="select select-bordered rounded-lg">
+                  <optgroup label="Anywhere in Nepal">
+                    <option value="AnywherePublicMeetup">Public Meetup</option>
+                    <option value="AnywhereDoorPickup">Door Pickup</option>
+                    <option value="AnywhereDoorDropoff">Door Dropoff</option>
+                  </optgroup>
+                  <optgroup disabled></optgroup>
+                  <optgroup label="Within My City">
+                    <option value="CityPublicMeetup">Public Meetup</option>
+                    <option value="CityDoorPickup">Door Pickup</option>
+                    <option value="CityDoorDropoff">Door Dropoff</option>
+                  </optgroup>
+                  <optgroup disabled></optgroup>
+                  <optgroup label="Within My Area">
+                    <option value="AreaPublicMeetup">Public Meetup</option>
+                    <option value="AreaDoorPickup">Door Pickup</option>
+                    <option value="AreaDoorDropoff">Door Dropoff</option>
+                  </optgroup>
+                </select>
+              </div>
+              <TextInput
+                required
+                type="number"
+                label="Delivery Cost"
+                placeholder="e.g. 100"
+                error={deliveryCostError}
+                setError={setDeliveryCostError}
+                value={delivery.cost === 0 ? "" : delivery.cost}
+                disabled={delivery.type === "AnywhereDoorPickup" || delivery.type === "CityDoorPickup" || delivery.type === "AreaDoorPickup"}
+                className="flex-1"
+                onChange={e => {
+                  setDelivery((prev) => ({ ...prev, cost: e.target.value }));
+                  setDeliveryCostError(false);
+                }}
+              />
             </div>
 
-            {/* Delivery Cost */}
+            {/* Keywords */}
             <TextInput
-              label="Delivery Cost"
-              placeholder="e.g. 100"
               required
-              error={deliveryCostError}
-              setError={setDeliveryCostError}
-              value={delivery.cost}
-              disabled={delivery.type === "Door Pickup"}
+              type="text"
+              label="Keywords"
+              placeholder="e.g. google, google pixel, android, phone"
+              error={keywordsError}
+              setError={setNameError}
+              value={tempKeywords}
               onChange={e => {
-                setDelivery((prev) => ({ ...prev, cost: e.target.value }));
-                setDeliveryCostError(false);
-              }} 
-              className="w-[60%]"
+                setTempKeywords(e.target.value);
+                setKeywordsError(false);
+              }}
             />
           </div>
         </div>
