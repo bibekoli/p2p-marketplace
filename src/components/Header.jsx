@@ -51,8 +51,8 @@ export default function Header() {
   ];
 
   return (
-      <div className="shadow">
-    <div className="navbar bg-base-100 max-w-screen-xl mx-auto">
+    <div className="shadow">
+      <div className="navbar bg-base-100 max-w-screen-xl mx-auto">
         <div className="navbar-start">
           <div className="dropdown dropdown-hover">
             <label tabIndex={0} className="btn btn-ghost btn-circle">
