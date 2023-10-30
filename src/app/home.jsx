@@ -10,7 +10,7 @@ import { Icon } from "@iconify/react";
 const ItemCard = ({ item }) => {
   return (
     <Link href={`/item/${item._id}`}>
-    <div className="flex flex-row shadow-lg p-2 gap-4 rounded-lg">
+      <div className="flex flex-row shadow-lg p-2 gap-4 rounded-lg">
         <div>
           <Image src={item.images[0]} alt={item.name} width={500} height={500} className="rounded-lg h-64 w-auto border" />
         </div>
@@ -59,7 +59,7 @@ export default function Home({ data }) {
   }  
 
   return (
-    <main className="max-w-screen-xl mx-auto">
+    <main className="max-w-screen-xl mx-auto mt-[80px]">
       {/* option to sort items by name, date */}
       <div className="flex flex-row justify-end">
         <select className="rounded-lg border-2 border-gray-300 p-2" onChange={sortItems}>

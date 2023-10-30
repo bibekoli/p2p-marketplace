@@ -1,6 +1,6 @@
 export default async function ItemNotFound() {
   return (
-    <div className="flex flex-col md:flex-row max-w-screen-xl mx-auto">
+    <div className="flex flex-col md:flex-row max-w-screen-xl mx-auto mt-[80px]">
       <div className={`flex flex-col md:w-1/2 m-4 relative rounded-xl`}>
         <div className="w-full h-96 bg-gray-200 rounded-xl"></div>
       </div>

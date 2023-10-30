@@ -205,8 +205,8 @@ export default function Form() {
   }
 
   return (
-    <div className="max-w-screen-xl mx-auto">
-      <div className="m-4 p-4 rounded-md">
+    <div className="max-w-screen-xl mx-auto mt-[80px]">
+      <div className="m-4 rounded-md">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-4">
             {/* Name */}

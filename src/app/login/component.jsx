@@ -12,7 +12,7 @@ export default function LoginComponent() {
   }
 
   return (
-    <main className="w-full mt-40 flex flex-col items-center justify-center sm:px-4">
+    <main className="w-full mt-60 flex flex-col items-center justify-center sm:px-4">
       <div className="bg-white shadow rounded-md p-4 py-6 sm:p-6 sm:rounded-lg flex justify-center w-[90%] m-4 max-w-md">
         <div>
           <div className="flex items-center justify-center text-2xl font-bold">
