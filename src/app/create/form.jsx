@@ -182,6 +182,7 @@ export default function Form() {
       my_location: myLocation,
       status: "available",
       visibility: "public",
+      views: 0,
       keywords,
       created_at: new Date(),
       seller: null,
