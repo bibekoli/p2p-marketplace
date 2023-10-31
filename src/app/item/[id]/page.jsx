@@ -1,9 +1,16 @@
+import { cookies } from "next/headers";
 import ItemNotFound from "./404";
 import ItemClient from "./client";
 
 async function getItem(id) {
   try{
-    const res = await fetch(process.env.NEXT_PUBLIC_URL + "/api/GetItem?id=" + id, { cache: "no-store" });
+    const res = await fetch(process.env.NEXT_PUBLIC_URL + "/api/GetItem?id=" + id, {
+      method: "GET",
+      headers: {
+        Cookie: cookies().toString(),
+      },
+      cache: "no-store"
+    });
     const json = await res.json();
     return json;
   }
