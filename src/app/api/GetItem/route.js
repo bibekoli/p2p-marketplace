@@ -16,17 +16,11 @@ export async function GET(request) {
   const user = await getServerSession();
 
   const item = await items.findOneAndUpdate({ 
-    _id: new ObjectId(id), 
-    visibility: "public" 
+    _id: new ObjectId(id),
   }, {
     $inc: {
       views: 1
     }
-  }, { 
-    projection: {
-      visibility: 0
-    },
-    returnDocument: "after"
   });
 
   if (!item) {
@@ -39,6 +33,9 @@ export async function GET(request) {
   }
   else {
     item.selfOwned = false;
+    if (item.visibility == "private") {
+      return NextResponse.json({});
+    }
     return NextResponse.json(item);
   }
 }
