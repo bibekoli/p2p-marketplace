@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import ConnectToDatabase from "@/modules/mongodb";
+import { ObjectId } from "mongodb";
 
 export async function POST(request) {
   try {
@@ -11,14 +12,29 @@ export async function POST(request) {
     const items = await db.collection("Items");
     const data = await request.json();
 
-    const seller = await db.collection("Users").findOne({ email: data.tempSellerRef });
-    data.seller = seller._id;
-    delete data.tempSellerRef;
-    
-    const response = await items.insertOne(data);
-    return NextResponse.json({
-      id: response.insertedId,
-    });
+    if (data._id) {
+      const id = data._id;
+      delete data._id;
+      await items.updateOne({
+        _id: new ObjectId(id)
+      }, {
+        $set: data
+      });
+
+      return NextResponse.json({
+        id: id,
+      });
+    }
+    else {
+      const seller = await db.collection("Users").findOne({ email: data.tempSellerRef });
+      data.seller = seller._id;
+      delete data.tempSellerRef;
+      
+      const response = await items.insertOne(data);
+      return NextResponse.json({
+        id: response.insertedId,
+      });
+    }
   }
   catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
