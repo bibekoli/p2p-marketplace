@@ -118,6 +118,12 @@ export default function Header() {
                       </Link>
                     </li>
                     <li>
+                      <Link href="/inbox">
+                        <Icon icon="ic:baseline-chat" width={25} height={25} />
+                        Inbox
+                      </Link>
+                    </li>
+                    <li>
                       <Link href="/create">
                         <Icon icon="gala:add" width={25} height={25} />
                         Post Ad
