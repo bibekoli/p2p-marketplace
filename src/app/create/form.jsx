@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Swal from "sweetalert2";
 
 const TextInput = ({ type, label, placeholder, required, disabled, error, setError, value, onChange, className }) => (
   <div className={`form-control w-full ${className}`}>
@@ -30,7 +30,7 @@ const DropDown = ({ label, required, value, onChange, options, className }) => (
   </div>
 );
 
-export default function Form() {
+export default function Form({ item: editItem }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
@@ -38,6 +38,8 @@ export default function Form() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [condition, setCondition] = useState("Good");
   const [category, setCategory] = useState("Others");
+  const [status, setStatus] = useState("available");
+  const [visibility, setVisibility] = useState("public");
   const [tempKeywords, setTempKeywords] = useState("");
   const [price, setPrice] = useState({
     type: "Fixed",
@@ -56,8 +58,24 @@ export default function Form() {
   const [deliveryCostError, setDeliveryCostError] = useState(false);
   const [keywordsError, setKeywordsError] = useState(false);
   const [saving, setSaving] = useState(false);
+  const editMode = editItem && editItem._id;
 
-  const router = useRouter();
+  useEffect(() => {
+    if (editMode) {
+      setName(editItem.name);
+      setDescription(editItem.description);
+      setImages(editItem.images);
+      setMyLocation(editItem.my_location);
+      setCondition(editItem.condition);
+      setCategory(editItem.category);
+      setPrice(editItem.price);
+      setDelivery(editItem.delivery);
+      setTempKeywords(editItem.keywords.join(", "));
+      setStatus(editItem.status);
+      setVisibility(editItem.visibility);
+    }
+  }, [editItem]);
+
   const { data } = useSession();
 
   const handleImageUpload = (e) => {
@@ -172,6 +190,7 @@ export default function Form() {
     }
     
     const item = {
+      ...(editMode && { _id: editItem._id }),
       name,
       description,
       images,
@@ -180,13 +199,13 @@ export default function Form() {
       price,
       delivery,
       my_location: myLocation,
-      status: "available",
-      visibility: "public",
-      views: 0,
+      status,
+      visibility,
+      views: editMode ? editItem.views : 0,
       keywords,
-      created_at: new Date(),
-      seller: null,
-      tempSellerRef: data.user.email
+      created_at: editMode ? editItem.created_at : new Date().toISOString(),
+      seller: editMode ? editItem.seller : null,
+      ...(!editMode && { tempSellerRef: data.user.email })
     }
 
     setSaving(true);
@@ -197,10 +216,42 @@ export default function Form() {
     })
     .then((res) => res.json())
     .then((data) => {
-      router.push(`/item/${data.id}`);
+      window.location.href = `/item/${data.id}`;
     })
     .catch((error) => {
       setSaving(false);
+    });
+  }
+
+  const deleteItem = () => {
+    Swal.fire({
+      title: "Delete Item",
+      text: "Are you sure you want to delete this item?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    })
+    .then((result) => {
+      if (result.isConfirmed) {
+        fetch("/api/DeleteAd", {
+          method: "POST",
+          body: JSON.stringify({ id: editItem._id })
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          window.location.href = "/";
+        })
+        .catch((error) => {
+          Swal.fire({
+            title: "Error",
+            text: error.response.data.error,
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        });
+      }
     });
   }
 
@@ -274,6 +325,9 @@ export default function Form() {
                 setMyLocationError(false);
               }}
             />
+
+            {/* Status */}
+            <DropDown label="Status" required value={status} onChange={e => setStatus(e.target.value)} options={["available", "sold"]} />
           </div>
 
           <div className="flex flex-col gap-4">
@@ -392,20 +446,56 @@ export default function Form() {
                 setKeywordsError(false);
               }}
             />
+
+            {/* Visibility */}
+            <DropDown label="Visibility" required value={visibility} onChange={e => setVisibility(e.target.value)} options={["public", "private"]} />
           </div>
         </div>
         <div className="flex justify-end gap-4 mt-4">
+          {
+            editMode && (
+              <button className="btn bg-red-500 hover:bg-red-600 rounded-lg text-white" onClick={deleteItem}>
+                <Icon icon="ant-design:delete-outlined" width={20} height={20} />
+                <span>Delete</span>
+              </button>
+            )
+          }
           <button className="btn btn-primary rounded-lg" onClick={addItem} disabled={saving}>
             {
               saving ? (
                 <>
-                  <Icon icon="gg:spinner-two-alt" width={20} height={20} className="animate-spin" />
-                  <span>Posting</span>
+                  {
+                    editMode ? (
+                      <>
+                        <>
+                          <Icon icon="gg:spinner-two-alt" width={20} height={20} className="animate-spin" />
+                          <span>Updating</span>
+                        </>
+                      </>
+                    ) : (
+                      <>
+                        <Icon icon="gg:spinner-two-alt" width={20} height={20} className="animate-spin" />
+                        <span>Posting</span>
+                      </>
+                    )
+                  
+                  }
                 </>
               ) : (
                 <>
-                  <Icon icon="ant-design:plus-outlined" width={20} height={20} />
-                  <span>Post</span>
+                  {
+                    editMode ? (
+                      <>
+                        <Icon icon="ic:round-update" width={20} height={20} />
+                        <span>Update</span>
+                      </>
+                    ) : (
+                      <>
+                        <Icon icon="ant-design:plus-outlined" width={20} height={20} />
+                        <span>Post</span>
+                      </>
+                    )
+                  }
                 </>
               )
             }
