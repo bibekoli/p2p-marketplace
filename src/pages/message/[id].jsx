@@ -50,6 +50,8 @@ export default function ChatCLient({ chats }) {
     return () => {
       socket.disconnect();
     };
+
+    //eslint-disable-next-line
   }, []);
 
   async function socketInitializer() {

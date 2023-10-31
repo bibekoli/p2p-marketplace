@@ -74,31 +74,44 @@ export default function Form({ item: editItem }) {
       setStatus(editItem.status);
       setVisibility(editItem.visibility);
     }
-  }, [editItem]);
+  }, [editItem, editMode]);
 
   const { data } = useSession();
 
   const handleImageUpload = (e) => {
     const files = e.target.files;
     if (files.length === 0) return;
-
-    const formData = new FormData();
-    formData.append("image", files[0]);
-    formData.append("type", "marketplace");
-    setUploadingImage(true);
-    setImageError(false);
-    fetch("/api/UploadImage", {
-      method: "POST",
-      body: formData
-    })
-    .then((res) => res.json())
-    .then((data) => {
-      setUploadingImage(false);
-      setImages((prev) => [...prev, data.image]);
-    })
-    .catch((error) => {
-      setUploadingImage(false);
-    });
+    const reader = new FileReader();
+    reader.readAsDataURL(files[0]);
+    reader.onload = () => {
+      setUploadingImage(true);
+      setImageError(false);
+      fetch("/api/UploadImage", {
+        method: "POST",
+        body: JSON.stringify({
+          image: reader.result.replace(/data:.*base64,/, ""),
+          type: "marketplace"
+        })
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        setUploadingImage(false);
+        if (data.image) {
+          setImages((prev) => [...prev, data.image]);
+        }
+        if (data.message) {
+          Swal.fire({
+            title: "Error",
+            text: data.message,
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
+      })
+      .catch((error) => {
+        setUploadingImage(false);
+      });
+    }
   }
 
   const itemCategories = [

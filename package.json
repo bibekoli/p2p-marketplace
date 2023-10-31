@@ -22,6 +22,7 @@
     "postcss": "8.4.31",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "sharp": "^0.32.6",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
     "sweetalert2": "^11.8.0",
