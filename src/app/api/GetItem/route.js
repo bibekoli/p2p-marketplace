@@ -26,6 +26,10 @@ export async function GET(request) {
   if (!item) {
     return NextResponse.json({}, { status: 404 });
   }
+
+  const sellerRes = await users.findOne({ _id: new ObjectId(item.seller) });
+  item.seller_name = sellerRes.name;
+
   if (user) {
     const userSearch = await users.findOne({ email: user.user.email });
     item.selfOwned = item.seller.toString() == userSearch._id.toString();
