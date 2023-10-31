@@ -40,7 +40,6 @@ export async function POST(request) {
         { "users._id": new ObjectId(buyer._id) },
       ]
     });
-    console.log(chat);
     if (chat) {
       return NextResponse.json({
         _id: chat._id,
