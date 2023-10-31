@@ -14,6 +14,7 @@ export async function POST(request) {
 
     if (data._id) {
       const id = data._id;
+      data.seller = new ObjectId(data.seller);
       delete data._id;
       await items.updateOne({
         _id: new ObjectId(id)
