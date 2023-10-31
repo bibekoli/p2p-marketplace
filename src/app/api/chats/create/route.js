@@ -14,6 +14,10 @@ export async function POST(request) {
 
     const buyer = await db.collection("Users").findOne({ email: data.temp_buyer_email });
     const seller = await db.collection("Users").findOne({ _id: new ObjectId(data.seller_id) });
+    if (buyer._id.toString() === seller._id.toString()) {
+      return NextResponse.json({ error: "This is your item" }, { status: 400 });
+    }
+
     const chatInit = {
       item: new ObjectId(data.item_id),
       users: [
@@ -36,6 +40,7 @@ export async function POST(request) {
         { "users._id": new ObjectId(buyer._id) },
       ]
     });
+    console.log(chat);
     if (chat) {
       return NextResponse.json({
         _id: chat._id,
