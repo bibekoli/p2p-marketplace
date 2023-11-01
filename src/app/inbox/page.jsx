@@ -12,6 +12,7 @@ async function getChatList() {
       headers: {
         Cookie: cookies().toString(),
       },
+      cache: "no-store",
     });
     const json = await res.json();
     return json;

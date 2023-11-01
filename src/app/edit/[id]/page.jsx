@@ -10,6 +10,7 @@ async function getItem(id) {
       headers: {
         Cookie: cookies().toString(),
       },
+      cache: "no-store",
     });
     const json = await res.json();
     return json;
