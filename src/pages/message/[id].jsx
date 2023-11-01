@@ -153,8 +153,8 @@ export default function ChatCLient({ chats }) {
         </svg>
       </div>
 
-      <div className="flex flex-col-reverse justify-between gap-3" style={{ height: "calc(100vh - 120px)" }}>
-        <div className="flex flex-col-reverse gap-3 px-4 pt-4 mb-auto overflow-y-auto" style={{ maxHeight: "calc(100vh - 120px)" }}>
+      <div className="flex flex-col-reverse justify-between gap-3" style={{ height: "calc(100vh - 170px)" }}>
+        <div className="flex flex-col-reverse gap-3 px-4 pt-4 mb-auto overflow-y-auto" style={{ maxHeight: "calc(100vh - 170px)" }}>
           {messages.map((message, index) => (
             <ChatBubble key={index} name={message.name} type={message.type} message={message.message} />
           ))}
