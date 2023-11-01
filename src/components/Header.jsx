@@ -108,7 +108,7 @@ export default function Header() {
                   <>
                     <li>
                       <Link href={`/account`}>
-                        <Image src={user.image} width={25} height={25} alt={user.name} className="rounded-full shadow-md" />
+                        <Image src={user.image} width={25} height={25} alt={user.name} className="rounded-full shadow-md" onError={(e) => {e.target.onerror = null; e.target.src="/next.svg"}} />
                         My Account
                       </Link>
                     </li>
