@@ -29,11 +29,6 @@ export default function Header() {
       icon: "ic:baseline-home",
     },
     {
-      title: "Recent",
-      path: "/new",
-      icon: "ic:baseline-history",
-    },
-    {
       title: "Categories",
       path: "/categories",
       icon: "carbon:category",
@@ -44,10 +39,10 @@ export default function Header() {
       icon: "ic:baseline-info",
     },
     {
-      title: "Contact Us",
-      path: "/contact",
-      icon: "ic:baseline-contact-page",
-    },
+      title: "FAQ",
+      path: "/faq",
+      icon: "ic:baseline-question-answer",
+    }
   ];
 
   return (

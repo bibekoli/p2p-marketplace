@@ -54,7 +54,7 @@ export default function ImageCarousel({ images, activeImageIndex, setActiveImage
                 key={index}
                 className="w-full flex-shrink-0">
                 <Image
-                  src={ image + "?w=512&h=512" }
+                  src={ "https://wsrv.nl?url=" + image + "&w=512&h=512&fit=cover&a=attention" }
                   alt={`Image ${index + 1}`}
                   className="w-full h-full object-cover rounded-md"
                   height={512}

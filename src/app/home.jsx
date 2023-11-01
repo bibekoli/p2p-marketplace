@@ -13,7 +13,7 @@ const ItemCard = ({ item }) => {
       <div className="flex flex-row shadow-lg p-2 gap-2 rounded-lg">
         <div className="flex-shrink-0">
           <Image
-            src={item.images[0]}
+            src={"https://wsrv.nl?url=" + item.images[0] + "&w=200&h=200&fit=cover&a=attention"}
             alt={item.name}
             width={256}
             height={256}

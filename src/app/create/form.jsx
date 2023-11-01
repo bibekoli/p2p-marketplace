@@ -379,7 +379,7 @@ export default function Form({ item: editItem }) {
                 {
                   images.map((image, index) => (
                     <div key={index} className="relative w-[150px] h-[150px] bg-white rounded-md border-2 border-gray-300 flex-shrink-0">
-                      <Image src={image} className="w-full h-full rounded-md object-cover" alt={`Image ${index}`} width={150} height={150} />
+                      <Image src={"https://wsrv.nl?url=" + image + "&w=200&h=200&fit=cover&a=attention"} className="w-full h-full rounded-md object-cover" alt={`Image ${index}`} width={150} height={150} />
                       <div className="absolute top-0 right-0 p-1">
                         <button className="btn btn-xs btn-circle text-white bg-red-500 hover:bg-red-600" onClick={() => setImages((prev) => prev.filter((_, i) => i !== index))}>
                           <Icon icon="maki:cross" width={14} height={14} />
