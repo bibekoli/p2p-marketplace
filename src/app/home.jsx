@@ -20,7 +20,7 @@ const ItemCard = ({ item }) => {
           />
         </div>
         <div className="flex flex-col justify-between">
-          <h1 className="text-2xl font-bold">{item.name}</h1>
+          <h1 className="text-xl font-bold">{item.name}</h1>
           <p className="text-gray-600 flex flex-row items-center gap-2">
             <span className="font-bold">रु. </span>
               {item.price.amount}
