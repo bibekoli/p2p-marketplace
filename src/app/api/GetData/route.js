@@ -10,14 +10,6 @@ export async function GET() {
       $match: { visibility: "public" }
     },
     {
-      $lookup: {
-        from: "Users",
-        localField: "seller",
-        foreignField: "_id",
-        as: "sellerInfo"
-      }
-    },
-    {
       $project: {
         _id: 1,
         name: 1,
@@ -30,7 +22,6 @@ export async function GET() {
         my_location: 1,
         status: 1,
         seller: 1,
-        seller_name: { $arrayElemAt: ["$sellerInfo.name", 0] },
         keywords: 1,
         created_at: 1,
       }
