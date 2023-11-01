@@ -17,7 +17,6 @@ const ItemCard = ({ item }) => {
         <div>
           <h1 className="text-2xl font-bold">{item.name}</h1>
           <p className="text-gray-600">Price: {item.price.amount}</p>
-          <p className="text-gray-600">Sold By: {item.seller_name}</p>
           <p className="text-gray-600">Location: {item.my_location}</p>
           <p className="text-gray-600">Category: {item.category}</p>
           <p className="text-gray-600">

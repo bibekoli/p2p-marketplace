@@ -19,5 +19,5 @@ export const metadata = {
 export default async function Index() {
   const data = await getData();
 
-  return <Home data={data} />;
+  return <Home data={data.reverse()} />;
 }

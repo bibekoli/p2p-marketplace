@@ -7,7 +7,10 @@ export async function GET() {
   
   const allItems = await items.aggregate([
     {
-      $match: { visibility: "public" }
+      $match: {
+        status: "available",
+        visibility: "public",
+      }
     },
     {
       $project: {
