@@ -5,9 +5,6 @@ async function getData() {
     const res = await fetch(process.env.NEXT_PUBLIC_URL + "/api/GetData", {
       method: "GET",
       cache: "no-store",
-      next: {
-        revalidate: 1,
-      }
     });
     const json = await res.json();
     return json;
