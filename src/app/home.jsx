@@ -122,7 +122,7 @@ export default function Home({ data }) {
         <div className="flex flex-col justify-between items-center gap-2">
           {
             (items.length > 0) && items.map((item, index) => (
-              <div  key={index}>
+              <div key={index} className="w-full">
                 <ItemCard item={item} />
                 <hr className="border-gray-300 w-full" />
               </div>
