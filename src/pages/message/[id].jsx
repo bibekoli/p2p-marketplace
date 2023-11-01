@@ -73,11 +73,14 @@ export default function ChatCLient({ chats }) {
     event.preventDefault();
 
     const message = event.target[0].value;
+    // if message is space or empty, return
+    if (!message.trim()) return;
+
     const payload = {
       _id: "",
       chatId: chats[0]._id,
       sender: currentUserId,
-      message,
+      message: message.trim(),
       createdAt: new Date(),
     };
 
