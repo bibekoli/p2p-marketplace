@@ -84,6 +84,8 @@ export default function ChatCLient({ chats }) {
       createdAt: new Date(),
     };
 
+    event.target[0].value = "";
+
     const res = await fetch("/api/chats/newMessage", {
       method: "POST",
       headers: {
@@ -110,7 +112,6 @@ export default function ChatCLient({ chats }) {
         name: chats[0].users.find(user => user._id !== currentUserId).name,
       });
 
-      event.target[0].value = "";
       payload._id = json._id;
       payload.type = "sent";
       payload.name = chats[0].users.find(user => user._id === currentUserId).name;
