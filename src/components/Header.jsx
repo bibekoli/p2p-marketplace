@@ -75,9 +75,6 @@ export default function Header() {
           </Link>
         </div>
         <div className="navbar-end">
-          <button className="btn btn-ghost btn-circle">
-            <Icon icon="ic:round-search" width={22} height={22} />
-          </button>
           <div className="dropdown dropdown-hover dropdown-end">
             <button tabIndex={0} className="btn btn-ghost btn-circle">
               {

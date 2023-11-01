@@ -9,7 +9,7 @@ import { Icon } from "@iconify/react";
 const ItemCard = ({ item }) => {
   return (
     <Link href={`/item/${item._id}`} className="w-full rounded-lg">
-      <div className="flex flex-row gap-4 rounded-lg m-2 hover:g-gray-100">
+      <div className="flex flex-row gap-4 rounded-lg m-2 hover:bg-gray-100">
         <div className="flex-shrink-0">
           <Image
             src={"https://wsrv.nl?url=" + item.images[0] + "&w=150&h=150&fit=cover&a=attention"}
