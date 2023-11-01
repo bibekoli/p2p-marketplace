@@ -25,6 +25,7 @@ export async function GET() {
         my_location: 1,
         status: 1,
         seller: 1,
+        views: 1,
         keywords: 1,
         created_at: 1,
       }
