@@ -1,20 +1,15 @@
 import Home from "@/app/home";
-import { cookies } from "next/headers";
 
 async function getData() {
   try{
     const res = await fetch(process.env.NEXT_PUBLIC_URL + "/api/GetData", {
       method: "GET",
-      headers: {
-        Cookie: cookies().toString(),
-      },
       cache: "no-store",
     });
     const json = await res.json();
     return json;
   }
   catch(e) {
-    console.log(e);
     return [];
   }
 }
