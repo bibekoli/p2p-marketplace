@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import "@/styles/globals.css";
 import io from "socket.io-client";
 import Router from "next/router";
+import { Icon } from "@iconify/react";
 let socket;
 
 const ChatBubble = ({ name, type, message }) => {
@@ -149,9 +150,10 @@ export default function ChatCLient({ chats }) {
             </h4>
           </div>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
-          <path fill="rgb(59, 130, 246)" d="M12 1.998c5.524 0 10.002 4.478 10.002 10.002c0 5.523-4.478 10-10.002 10c-5.524.001-10-4.477-10-10C1.999 6.476 6.476 1.998 12 1.998Zm-.004 8.25a1 1 0 0 0-.992.885l-.007.116l.004 5.502l.006.116a1 1 0 0 0 1.987 0L13 16.75l-.004-5.502l-.007-.117a1 1 0 0 0-.994-.882Zm.005-3.749a1.251 1.251 0 1 0 0 2.503A1.251 1.251 0 0 0 12 6.5Z"/>
-        </svg>
+        {/* home button */}
+        <button onClick={() => Router.push("/")}>
+          <Icon icon="ant-design:home-filled" width="24" height="24" className="text-blue-500" />
+        </button>
       </div>
 
       <div className="flex flex-col-reverse justify-between gap-3" style={{ height: "calc(100vh - 170px)" }}>
@@ -161,7 +163,7 @@ export default function ChatCLient({ chats }) {
           ))}
         </div>
     
-        <form className="flex items-center gap-3 mt-auto fixed bottom-0 w-full p-4 bg-white" onSubmit={sendMessage}>
+        <form className="flex items-center gap-3 mt-auto fixed bottom-0 max-w-screen-xl w-full p-4 xl:px-0 bg-white" onSubmit={sendMessage}>
           <input type="text" className="input input-bordered focus:outline-none rounded-lg w-full" placeholder="Type a message..." autoFocus />
           <button type="submit" className="btn btn-primary rounded-lg">Send</button>
         </form>
