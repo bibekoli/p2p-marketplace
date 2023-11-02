@@ -112,6 +112,8 @@ export default function Form({ item: editItem }) {
         setUploadingImage(false);
       });
     }
+    // clear the input
+    e.target.value = null;
   }
 
   const itemCategories = [
