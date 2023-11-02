@@ -195,7 +195,7 @@ export default function Form({ item: editItem }) {
       error = true;
     }
 
-    if (price.amount === 0) {
+    if (price.amount === 0 && price.type !== "Free") {
       setPriceError(true);
       error = true;
     }
@@ -237,7 +237,10 @@ export default function Form({ item: editItem }) {
       images,
       condition,
       category,
-      price,
+      price: {
+        type: price.type,
+        amount: price.amount || 0
+      },
       delivery,
       my_location: myLocation,
       status,
@@ -349,7 +352,7 @@ export default function Form({ item: editItem }) {
                 }} 
                 className="w-[60%]"
               />
-              <DropDown label="Price Type" required value={price.type} onChange={e => setPrice((prev) => ({ ...prev, type: e.target.value }))} options={["Fixed", "Negotiable", "Free"]} className="w-[40%]" />
+              <DropDown label="Price Type" required value={price.type} onChange={e => {setPrice((prev) => ({ ...prev, type: e.target.value })); setPriceError(false);}} options={["Fixed", "Negotiable", "Free"]} className="w-[40%]" />
             </div>
 
             {/* My Location */}
