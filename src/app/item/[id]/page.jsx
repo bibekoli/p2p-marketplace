@@ -31,5 +31,5 @@ export default async function Item({ params }) {
     return <ItemNotFound />;
   }
 
-  return <ItemClient item={item} />;
+  return <ItemClient item={item.item} related={item.related} />;
 }
