@@ -224,7 +224,7 @@ export default function ItemClient({ item, related }) {
                     <Image
                       src={"https://wsrv.nl?url=" + item.images[0] + "&w=200&h=200&fit=cover&a=attention"}
                       alt={item.name}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover hover:scale-105 transition-all duration-300"
                       height={200}
                       width={200}
                     />

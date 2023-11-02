@@ -56,7 +56,7 @@ export default function ImageCarousel({ images, activeImageIndex, setActiveImage
                 <Image
                   src={ "https://wsrv.nl?url=" + image + "&w=512&h=512&fit=cover&a=attention" }
                   alt={`Image ${index + 1}`}
-                  className="w-full h-full object-cover rounded-md"
+                  className="w-full h-full object-cover rounded-md hover:scale-105 transition-all duration-300"
                   height={512}
                   width={512}
                 />

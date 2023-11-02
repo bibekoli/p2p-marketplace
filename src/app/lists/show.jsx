@@ -86,9 +86,7 @@ export default function MyItemList({ items, title, owner}) {
             <div key={index}>
               <div className="bg-base-100 p-4 mx-4 rounded-lg flex items-center gap-2 justify-between">
                 <div className="flex items-center">
-                  <div className="w-16 h-16 rounded-lg overflow-hidden">
-                    <Image src={"https://wsrv.nl?url=" + item.images[0] + "&w=64&h=64&fit=cover&a=attention"} width={64} height={64} alt="item image" />
-                  </div>
+                  <Image src={"https://wsrv.nl?url=" + item.images[0] + "&w=128&h=128&fit=cover&a=attention"} width={64} height={64} alt="item image" className="rounded-lg hover:scale-105 transition-all duration-300" />
                   <div className="flex flex-col ml-4">
                     <div className="text-lg font-bold">{item.name}</div>
                     <div className="text-sm flex items-center gap-3">

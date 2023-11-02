@@ -9,14 +9,15 @@ import { Icon } from "@iconify/react";
 const ItemCard = ({ item }) => {
   return (
     <Link href={`/item/${item._id}`} className="w-full rounded-lg">
-      <div className="flex flex-row gap-4 rounded-lg m-2 p-4 hover:bg-gray-100">
+      {/* scale on card hover */}
+      <div className="flex flex-row gap-4 rounded-lg m-2 p-4 hover:bg-gray-100 transition-all duration-300 cursor-pointer">
         <div className="flex-shrink-0">
           <Image
             src={"https://wsrv.nl?url=" + item.images[0] + "&w=150&h=150&fit=cover&a=attention"}
             alt={item.name}
             width={150}
             height={150}
-            className="rounded-lg h-[150px] w-[150px] border object-cover"
+            className="rounded-lg h-[150px] w-[150px] border object-cover hover:scale-105 transition-all duration-300"
           />
         </div>
         <div className="flex flex-col justify-between">
