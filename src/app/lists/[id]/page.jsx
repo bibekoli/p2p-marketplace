@@ -30,6 +30,6 @@ export default async function UserList({ params }) {
   }
 
   return (
-    <MyItemList items={userItems} title={userItems[0].seller_name + "'s Listings"} />
+    <MyItemList items={userItems.reverse()} title={userItems[0].seller_name + "'s Listings"} />
   );
 }

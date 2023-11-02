@@ -35,6 +35,6 @@ export default async function MyItems() {
   }
 
   return (
-    <MyItemList items={myItems[0].items} title="My Items" owner="me" />
+    <MyItemList items={myItems[0].items.reverse()} title="My Items" owner="me" />
   );
 }
