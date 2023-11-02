@@ -22,12 +22,14 @@ const ItemCard = ({ item }) => {
         <div className="flex flex-col justify-between">
           <h1 className="text-xl font-bold">{item.name}</h1>
           <p className="text-gray-600 flex flex-row items-center gap-2">
-            <span className="font-bold">रु. </span>
               {
                 item.price.type === "Free" || item.price.amount === 0 ? (
-                  "FREE"
+                  <span className="font-semibold">FREE</span>
                 ) : (
-                  item.price.amount.toLocaleString("ne-NP")
+                  <>
+                    <span className="font-semibold">रु. </span>
+                    {item.price.amount.toLocaleString("ne-NP")}
+                  </>
                 )
               }
           </p>

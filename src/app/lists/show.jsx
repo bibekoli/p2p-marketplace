@@ -92,12 +92,14 @@ export default function MyItemList({ items, title, owner}) {
                   <div className="flex flex-col ml-4">
                     <div className="text-lg font-bold">{item.name}</div>
                     <div className="text-sm flex items-center gap-3">
-                      रु. <> </>
                       {
                         item.price.type === "Free" || item.price.amount === 0 ? (
-                          "FREE"
+                          <span className="font-semibold">FREE</span>
                         ) : (
-                          item.price.amount.toLocaleString("ne-NP")
+                          <>
+                            <span className="font-semibold">रु. </span>
+                            {item.price.amount.toLocaleString("ne-NP")}
+                          </>
                         )
                       }
                       <span>{ item.status === "sold" ? status.sold : status.available}</span>
@@ -117,7 +119,7 @@ export default function MyItemList({ items, title, owner}) {
                       <Icon icon="ion:eye" height="24" width="24" />
                       </button>
                     </Link>
-                    <button className="btn p-2 btn-circle" style={{ display: owner === "me" ? "inline-block" : "none", display: 'flex', justifyContent: 'center', alignItems: 'center' }} onClick={() => deleteItem(item._id)}>
+                    <button className="btn p-2 btn-circle" style={{ display: owner === "me" ? "inline-block" : "none" }} onClick={() => deleteItem(item._id)}>
                       <Icon icon="tabler:trash" height="24" width="24" />
                     </button>
                   </div>
