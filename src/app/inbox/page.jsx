@@ -52,7 +52,7 @@ export default async function MessageList() {
             <Link className="bg-base-200 p-4 mx-4 rounded-lg flex items-center gap-2 justify-between" key={index} href={"/message/" + chat._id}>
               <div className="flex items-center">
                 <div className="w-12 h-12 rounded-full bg-base-300 mr-4">
-                  <Image src={chat.itemInfo.images[0]} alt={chat.itemInfo.name} width={48} height={48} className="rounded-full" />
+                  <Image src={"https://wsrv.nl?url=" + chat.itemInfo.images[0] + "&w=48&h=48&fit=cover&a=attention"} alt={chat.itemInfo.name} width={48} height={48} className="rounded-full" />
                 </div>
                 <div className="flex flex-col">
                   <div className="font-bold">

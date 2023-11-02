@@ -29,11 +29,6 @@ export default function Header() {
       icon: "ic:baseline-home",
     },
     {
-      title: "Categories",
-      path: "/categories",
-      icon: "carbon:category",
-    },
-    {
       title: "About Us",
       path: "/about",
       icon: "ic:baseline-info",
@@ -104,9 +99,9 @@ export default function Header() {
                 (status === "authenticated") && (
                   <>
                     <li>
-                      <Link href={`/account`}>
+                      <Link href={`/lists`}>
                         <Image src={user.image} width={25} height={25} alt={user.name} className="rounded-full shadow-md" onError={(e) => {e.target.onerror = null; e.target.src="/next.svg"}} />
-                        My Account
+                        My Listings
                       </Link>
                     </li>
                     <li>

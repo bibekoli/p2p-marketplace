@@ -138,7 +138,7 @@ export default function ChatCLient({ chats }) {
           </button>
           <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
             <span className="text-2xl font-bold flex items-center justify-center">
-              <Image src={chats[0].itemInfo[0].images[0]} width={32} height={32} className="rounded-full" alt="item image" />
+              <Image src={"https://wsrv.nl?url=" + chats[0].itemInfo[0].images[0] + "&w=32&h=32&fit=cover&a=attention"} width={32} height={32} className="rounded-full" alt="item image" />
             </span>
           </div>
           <div>
