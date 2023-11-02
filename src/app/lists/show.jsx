@@ -60,7 +60,7 @@ export default function MyItemList({ items, title, owner}) {
                   <div className="flex flex-col ml-4">
                     <div className="text-lg font-bold">{item.name}</div>
                     <div className="text-sm flex items-center gap-2">
-                      रु. {item.price.amount} <span className={`text-xs ${ item.status === "sold" ? "text-red-500" : "text-green-500" }`}>{ item.status === "sold" ? status.sold : status.available}</span>
+                      रु. {item.price.amount.toLocaleString("ne-NP")} <span className={`text-xs ${ item.status === "sold" ? "text-red-500" : "text-green-500" }`}>{ item.status === "sold" ? status.sold : status.available}</span>
                     </div>
                   </div>
                 </div>
