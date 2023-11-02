@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { deliveryType } from "@/modules/dataRepo";
 import { ConvertDateToDaysAgo } from "@/modules/utilities";
+import Image from "next/image";
 
 const TableRow = ({ label, value }) => (
   <tr className="border-b">
@@ -220,10 +221,12 @@ export default function ItemClient({ item, related }) {
               <Link key={index} href={`/item/${item._id}`}>
                 <div className="flex flex-col rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg h-full">
                   <div className="relative">
-                    <img
+                    <Image
                       src={"https://wsrv.nl?url=" + item.images[0] + "&w=200&h=200&fit=cover&a=attention"}
                       alt={item.name}
                       className="h-full w-full object-cover"
+                      height={200}
+                      width={200}
                     />
                   </div>
                   <div className="p-4">
