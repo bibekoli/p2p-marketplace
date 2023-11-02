@@ -7,8 +7,40 @@ import { Icon } from "@iconify/react";
 
 export default function MyItemList({ items, title, owner}) {
   const status = {
-    available: <Icon icon="mingcute:check-circle-fill" height="18" width="18" />,
-    sold: <Icon icon="octicon:x-circle-fill-16" height="15" width="15" />
+    available: (
+      <>
+        {
+          owner === "me" ? (
+            <div className="flex items-center gap-1 text-red-500">
+              <Icon icon="octicon:x-circle-fill-16" height="13" width="13" />
+              <span className="text-xs">Selling</span>
+            </div>
+            ) : (
+            <div className="flex items-center gap-1 text-green-500">
+              <Icon icon="mingcute:check-circle-fill" height="16" width="16" />
+              <span className="text-xs">Available</span>
+            </div>
+          )
+        }
+      </>
+    ),
+    sold: (
+      <>
+        {
+          owner === "me" ? (
+            <div className="flex items-center gap-1 text-green-500">
+              <Icon icon="mingcute:check-circle-fill" height="16" width="16" />
+              <span className="text-xs">Sold</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 text-red-500">
+              <Icon icon="octicon:x-circle-fill-16" height="13" width="13" />
+              <span className="text-xs">Sold</span>
+            </div>
+          )
+        }
+      </>
+    )
   }
 
   const deleteItem = id => {
@@ -59,8 +91,16 @@ export default function MyItemList({ items, title, owner}) {
                   </div>
                   <div className="flex flex-col ml-4">
                     <div className="text-lg font-bold">{item.name}</div>
-                    <div className="text-sm flex items-center gap-2">
-                      रु. {item.price.amount.toLocaleString("ne-NP")} <span className={`text-xs ${ item.status === "sold" ? "text-red-500" : "text-green-500" }`}>{ item.status === "sold" ? status.sold : status.available}</span>
+                    <div className="text-sm flex items-center gap-3">
+                      रु. <> </>
+                      {
+                        item.price.type === "Free" || item.price.amount === 0 ? (
+                          "FREE"
+                        ) : (
+                          item.price.amount.toLocaleString("ne-NP")
+                        )
+                      }
+                      <span>{ item.status === "sold" ? status.sold : status.available}</span>
                     </div>
                   </div>
                 </div>
