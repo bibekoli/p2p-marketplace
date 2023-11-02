@@ -23,9 +23,13 @@ const ItemCard = ({ item }) => {
           <h1 className="text-xl font-bold">{item.name}</h1>
           <p className="text-gray-600 flex flex-row items-center gap-2">
             <span className="font-bold">रु. </span>
-              {/* {item.price.amount} */}
-              {/* add comma to price like: 100 | 1000 | 10, 000 | 1, 00, 000 | 10, 10, 100*/}
-              {item.price.amount.toLocaleString("ne-NP")}
+              {
+                item.price.type === "Free" || item.price.amount === 0 ? (
+                  "FREE"
+                ) : (
+                  item.price.amount.toLocaleString("ne-NP")
+                )
+              }
           </p>
           <p className="text-gray-600 flex flex-row items-center gap-2">
             <Icon icon="mdi:location" width="20" height="20" />
