@@ -123,8 +123,8 @@ export default function ItemClient({ item, related }) {
               {item.views} Views
             </span>
             <button
-              disabled={chatLoading || item.status === "sold"}
-              className={`font-[500] flex items-center text-white px-4 py-2 rounded-xl ${(chatLoading || item.status === "sold") ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"}`}
+              disabled={chatLoading || item.status === "sold" && !item.selfOwned}
+              className={`font-[500] flex items-center text-white px-4 py-2 rounded-xl ${(chatLoading || item.status === "sold" && !item.selfOwned) ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"}`}
               onClick={chatButtonClicked}>
               {
                 item.selfOwned ? (
