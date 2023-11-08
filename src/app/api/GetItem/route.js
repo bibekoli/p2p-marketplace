@@ -43,7 +43,7 @@ export async function GET(request) {
     item.selfOwned = false;
   }
 
-  // getting 24 related products based on same category, keywords, title words, description words (in that order) if no at least 24 products found, then it will get 24 random products
+  // getting 12 related products based on same category, keywords, title words, description words (in that order) if no at least 12 products found, then it will get 12 random products
   // exclude status: "sold" and visibility: "private" and current item
   const related = await items.aggregate([
     {
@@ -54,19 +54,19 @@ export async function GET(request) {
           { visibility: { $ne: "private" } },
           { $or: [
             { category: item.category },
-            { keywords: { $in: item.keywords } },
+            // { keywords: { $in: item.keywords } },
             { name: { $in: item.name.split(" ") } },
-            { description: { $in: item.description.split(" ") } },
+            // { description: { $in: item.description.split(" ") } },
           ] }
         ]
       }
     },
-    { $sample: { size: 24 } }
+    { $sample: { size: 12 } }
   ]).toArray();
 
-  if (related.length < 24) {
+  if (related.length < 12) {
     // excluding current item and related items
-    // const random = await items.aggregate([{ $sample: { size: 24 - related.length } }]).toArray();
+    // const random = await items.aggregate([{ $sample: { size: 12 - related.length } }]).toArray();
     const random = await items.aggregate([
       {
         $match: {
@@ -78,7 +78,7 @@ export async function GET(request) {
           ]
         }
       },
-      { $sample: { size: 24 - related.length } }
+      { $sample: { size: 12 - related.length } }
     ]).toArray();
     related.push(...random);
   }
