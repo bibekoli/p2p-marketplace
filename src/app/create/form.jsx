@@ -199,6 +199,11 @@ export default function Form({ item: editItem }) {
       error = true;
     }
 
+    if (price.amount < 0) {
+      setPriceError(true);
+      error = true;
+    }
+
     if (myLocation.trim() === "") {
       setMyLocationError(true);
       error = true;
@@ -210,6 +215,11 @@ export default function Form({ item: editItem }) {
     }
 
     if (delivery.cost === 0 && delivery.type !== "AnywhereDoorPickup" && delivery.type !== "CityDoorPickup" && delivery.type !== "AreaDoorPickup") {
+      setDeliveryCostError(true);
+      error = true;
+    }
+
+    if (delivery.cost < 0) {
       setDeliveryCostError(true);
       error = true;
     }
